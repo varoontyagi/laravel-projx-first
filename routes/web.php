@@ -20,4 +20,6 @@ Route::get('/', function () {
 
 use App\Http\Controllers\PostsController;
 
-Route::get('/posts/{post}', [PostsController::class, 'show']);
+//Route::get('/posts/{post}', [PostsController::class, 'show']);
+
+Route::get('/posts/{post}', [PostsController::class, 'datashow']);
