@@ -17,9 +17,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
-
-
 Route::get('/about', function () {
 
     //$articles = App\Models\Articles::all();
@@ -32,14 +29,16 @@ Route::get('/about', function () {
     ]);
 });
 
-use App\Http\Controllers\ArticlesController;
-Route::get('/articles/{article}', [ArticlesController::class, 'show']);
-Route::get('/articles', [ArticlesController::class, 'list']);
-
-
-
 use App\Http\Controllers\PostsController;
-
-//Route::get('/posts/{post}', [PostsController::class, 'show']);
-
 Route::get('/posts/{post}', [PostsController::class, 'datashow']);
+
+
+use App\Http\Controllers\ArticlesController;
+Route::get('/articles', [ArticlesController::class, 'index'])->name('articles.index');
+Route::post('/articles', [ArticlesController::class, 'store']);
+Route::get('articles/create', [ArticlesController::class, 'create']);
+Route::get('/articles/{article}', [ArticlesController::class, 'show'])->name('articles.show');
+Route::get('/articles/{article}/edit', [ArticlesController::class, 'edit']);
+Route::put('/articles/{article}', [ArticlesController::class, 'update']);
+
+
