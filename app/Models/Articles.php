@@ -24,6 +24,6 @@ class Articles extends Model
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class);
+        return $this->belongsToMany(Tag::class)->withTimestamps(); //To add timestamo use withTimestamps();. By defauls it's empty.
     }
 }

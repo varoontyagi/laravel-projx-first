@@ -32,11 +32,12 @@ class ArticlesController extends Controller
 
         if(request('tag'))
         {
-            $articles = Tag::where('name', request('tag'))->firstOrfail()->articles;
+            $articles = Tag::where('name', request('tag'))->firstOrFail()->articles;
         }
-        //$articles = Articles::all(); //$articles = Articles::paginate(2);
-        $articles = Articles::latest()->get(); // latest - Order by created_at desc.
-
+        else {
+            $articles = Articles::latest()->get(); // latest - Order by created_at desc.
+        }
+                         //$articles = Articles::all(); //$articles = Articles::paginate(2);
         return view('articles.index', ['articles' => $articles]);
     }
 
@@ -48,8 +49,9 @@ class ArticlesController extends Controller
      */
     public function create()
     {
-       //ie('hello');
-       return view('articles.create');
+       return view('articles.create', [
+           'tags' => Tag::all()
+       ]);
     }
 
     /**
@@ -60,7 +62,14 @@ class ArticlesController extends Controller
      */
     public function store(Request $request)
     {  
-        Articles::create($this->validateArticle());
+        //dd(\request()->all());
+
+        $article = new Articles($this->validateArticle());
+        $article->user_id = 1; //auth()->id() while user is logged in.
+        $article->save();
+        //Articles::create($this->validateArticle());
+
+        $article->tags()->attach(\request('tags')); //Attach all the Array id's to the Article ID in the relation table. Opposite is detach.
 
         return redirect(route('articles.index'));
     }
@@ -106,7 +115,8 @@ class ArticlesController extends Controller
        return request()->validate([
             'title' =>  'required',
             'article_summary' => 'required',
-            'article_body' => 'required'
+            'article_body' => 'required',
+            'tags' => 'exists:tags,id' //the tags should exists in 'tags' table in 'id' column.
         ]);
     }
 
